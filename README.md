@@ -23,10 +23,7 @@ Images are resized and converted to grayscale.
 - NumPy
 
 ## Project Structure
-model/
-src/
-dataset/
-index.html
+`model/` `src/` `dataset/` `index.html`
 
 ## How to Run
 
@@ -49,5 +46,6 @@ Model achieves around 60% accuracy on test data.
 ## Author
 Nandika Garg  
 Reg No: 2427030369
+
 
 
