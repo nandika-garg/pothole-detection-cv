@@ -1,106 +1,53 @@
 # Pothole Detection using Computer Vision
 
-## Overview
-This project aims to detect potholes on road surfaces using computer vision and deep learning. A Convolutional Neural Network (CNN) model is trained on images of potholes and plain roads to classify whether a pothole is present or not.
+## Project Description
+This project detects potholes on road images using a Convolutional Neural Network (CNN). 
+It classifies images into pothole and plain road.
 
----
+## Features
+- Image classification using CNN
+- Detects potholes from input images
+- Simple and lightweight model
 
-## Objective
-- Detect potholes from road images
-- Improve road safety using AI
-- Build a basic deep learning model
+## Dataset
+The dataset consists of images of:
+- Potholes
+- Plain roads
 
----
+Images are resized and converted to grayscale.
 
 ## Technologies Used
 - Python
-- OpenCV
 - TensorFlow / Keras
+- OpenCV
 - NumPy
-- Scikit-learn
 
----
-
-## Dataset
-The dataset contains images divided into two categories:
-- Pothole
-- Plain road
-
-Dataset is structured as:
+## Project Structure
+model/
+src/
 dataset/
- ├── train/
- │    ├── pothole/
- │    └── plain/
-
----
-
-## Methodology
-1. Collect images of potholes and normal roads
-2. Convert images to grayscale
-3. Resize images to fixed size (100x100)
-4. Train CNN model using labeled data
-5. Save model as .h5 file
-6. Use model for prediction
-
----
-
-## Model Architecture
-- Convolutional Layers (feature extraction)
-- Activation (ReLU)
-- Global Average Pooling
-- Fully Connected Layers
-- Softmax output (classification)
-
----
+index.html
 
 ## How to Run
 
-### 1. Train Model
+1. Install dependencies:
+pip install numpy tensorflow keras opencv-python
+
+2. Run training:
 python3 src/main.py
-### 2. Predict Image
+
+3. Run prediction:
 python3 src/predictor.py
 
----
-
-## Output
-The model predicts:
-- Pothole
-- Plain Road
-
-Example:
-Prediction: Pothole
-
----
-
-## Project Structure
-pothole detection using computer vision/
-│
-├── dataset/
-├── model/
-│ └── pothole_model.h5
-│
-├── src/
-│ ├── main.py
-│ └── predictor.py
-│
-├── README.md
-├── requirements.txt
-
----
-
-## Limitations
-- Only classifies image, does not detect location
-- Limited dataset
-- Accuracy can be improved
-
----
+## Results
+Model achieves around 60% accuracy on test data.
 
 ## Future Work
-- Real-time pothole detection using video
+- Improve dataset
+- Use YOLO for real-time detection
 
----
+## Author
+Nandika Garg  
+Reg No: 2427030369
 
-## Conclusion
-This project demonstrates how computer vision and deep learning can be used to detect potholes and improve road maintenance systems.
 
----
