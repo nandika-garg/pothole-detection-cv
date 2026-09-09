@@ -7,7 +7,7 @@ import numpy as np
 import cv2
 import glob
 from keras.models import Sequential
-from keras.layers import Conv2D, Dense, Activation, Dropout, GlobalAveragePooling2D
+from keras.layers import Conv2D, MaxPooling2D, Dense, Activation, Dropout, GlobalAveragePooling2D
 from keras.callbacks import EarlyStopping
 from sklearn.utils import shuffle
 from keras.utils import to_categorical
@@ -129,8 +129,14 @@ print("Building model...")
 
 model = Sequential()
 
-model.add(Conv2D(16, (3,3), activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
-model.add(Conv2D(32, (3,3), activation='relu'))
+model.add(Conv2D(32, (3,3), activation='relu', input_shape=(IMG_SIZE, IMG_SIZE, 3)))
+model.add(MaxPooling2D(2,2))
+
+model.add(Conv2D(64, (3,3), activation='relu'))
+model.add(MaxPooling2D(2,2))
+
+model.add(Conv2D(128, (3,3), activation='relu'))
+model.add(MaxPooling2D(2,2))
 
 model.add(GlobalAveragePooling2D())
 
