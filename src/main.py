@@ -8,6 +8,7 @@ import cv2
 import glob
 from keras.models import Sequential
 from keras.layers import Conv2D, Dense, Activation, Dropout, GlobalAveragePooling2D
+from keras.callbacks import EarlyStopping
 from sklearn.utils import shuffle
 from keras.utils import to_categorical
 
@@ -15,7 +16,7 @@ from keras.utils import to_categorical
 # Configuration
 # -------------------------------
 IMG_SIZE = 100
-EPOCHS = 5
+EPOCHS = 50
 
 print("Loading dataset...")
 
@@ -57,6 +58,38 @@ for path in plain_images:
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
         data.append(img)
         labels.append(0)
+# -------------------------------
+# Load TEST images (held-out, never trained on)
+# -------------------------------
+test_pothole_images = glob.glob("dataset/test/pothole/*")
+test_plain_images = glob.glob("dataset/test/plain/*")
+
+print("Test pothole images found:", len(test_pothole_images))
+print("Test plain images found:", len(test_plain_images))
+
+test_data = []
+test_labels = []
+
+for path in test_pothole_images:
+    img = cv2.imread(path)
+    if img is not None:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        test_data.append(img)
+        test_labels.append(1)
+
+for path in test_plain_images:
+    img = cv2.imread(path)
+    if img is not None:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
+        test_data.append(img)
+        test_labels.append(0)
+
+test_data = np.array(test_data)
+test_labels = np.array(test_labels)
+
+print("Total test images:", len(test_data))
 
 data = np.array(data)
 labels = np.array(labels)
@@ -86,6 +119,9 @@ data = data / 255.0
 # Convert labels
 labels = to_categorical(labels)
 
+test_data = test_data.reshape(test_data.shape[0], IMG_SIZE, IMG_SIZE, 3)
+test_data = test_data / 255.0
+test_labels = to_categorical(test_labels)
 # -------------------------------
 # Build model
 # -------------------------------
@@ -118,8 +154,14 @@ print("Model compiled successfully")
 # Train
 # -------------------------------
 print("Training model...")
-
-history = model.fit(data, labels, epochs=EPOCHS, validation_split=0.1)
+es = EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+history = model.fit(data, labels, epochs=EPOCHS, validation_split=0.1, callbacks=[es])
+# -------------------------------
+# Evaluate on the REAL held-out test set
+# -------------------------------
+print("Evaluating on test set...")
+test_loss, test_acc = model.evaluate(test_data, test_labels)
+print(f"Test accuracy: {test_acc:.4f}")
 
 # -------------------------------
 # Save model
