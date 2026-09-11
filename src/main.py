@@ -12,6 +12,7 @@ from keras.callbacks import EarlyStopping
 from sklearn.utils import shuffle
 from keras.utils import to_categorical
 from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
 
 # -------------------------------
 # Configuration
@@ -164,6 +165,30 @@ print("Training model...")
 es = EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
 history = model.fit(data, labels, epochs=EPOCHS, validation_split=0.1, callbacks=[es])
 # -------------------------------
+# Plot training history
+# -------------------------------
+plt.figure(figsize=(10, 4))
+
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.title('Accuracy over Epochs')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Loss over Epochs')
+plt.legend()
+
+plt.tight_layout()
+plt.savefig('training_history.png')
+print("Training history plot saved as training_history.png")
+# -------------------------------
 # Evaluate on the REAL held-out test set
 # -------------------------------
 print("Evaluating on test set...")
@@ -181,6 +206,12 @@ print(classification_report(true_classes, predicted_classes, target_names=["plai
 
 print("Confusion matrix:")
 print(confusion_matrix(true_classes, predicted_classes))
+
+print("\nMisclassified images:")
+for i in range(len(test_data)):
+    if true_classes[i] != predicted_classes[i]:
+        label_names = ["plain", "pothole"]
+        print(f"Index {i}: true={label_names[true_classes[i]]}, predicted={label_names[predicted_classes[i]]}")
 
 # -------------------------------
 # Save model
