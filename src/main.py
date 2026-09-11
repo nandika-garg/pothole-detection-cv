@@ -11,6 +11,7 @@ from keras.layers import Conv2D, MaxPooling2D, Dense, Activation, Dropout, Globa
 from keras.callbacks import EarlyStopping
 from sklearn.utils import shuffle
 from keras.utils import to_categorical
+from sklearn.metrics import classification_report, confusion_matrix
 
 # -------------------------------
 # Configuration
@@ -168,6 +169,18 @@ history = model.fit(data, labels, epochs=EPOCHS, validation_split=0.1, callbacks
 print("Evaluating on test set...")
 test_loss, test_acc = model.evaluate(test_data, test_labels)
 print(f"Test accuracy: {test_acc:.4f}")
+# -------------------------------
+# Detailed breakdown: precision, recall, confusion matrix
+# -------------------------------
+predictions = model.predict(test_data)
+predicted_classes = np.argmax(predictions, axis=1)
+true_classes = np.argmax(test_labels, axis=1)
+
+print("\nClassification report:")
+print(classification_report(true_classes, predicted_classes, target_names=["plain", "pothole"]))
+
+print("Confusion matrix:")
+print(confusion_matrix(true_classes, predicted_classes))
 
 # -------------------------------
 # Save model
